@@ -5,7 +5,9 @@ import fr.simplex_software.workshop.jakarta.orm.data.Order;
 import io.restassured.http.*;
 import org.apache.http.*;
 import org.junit.jupiter.api.*;
+import org.slf4j.*;
 import org.testcontainers.containers.*;
+import org.testcontainers.containers.output.*;
 import org.testcontainers.containers.wait.strategy.*;
 import org.testcontainers.junit.jupiter.*;
 import org.testcontainers.junit.jupiter.Container;
@@ -19,22 +21,23 @@ import static org.assertj.core.api.Assertions.*;
 @Testcontainers
 public class TestCustomer
 {
-  static {
-    System.setProperty("testcontainers.verbose", "true");
-  }
+  private static Logger LOG = LoggerFactory.getLogger("orders");
 
   @Container
-  private static final ComposeContainer environment =
-    new ComposeContainer(new File("src/main/resources/docker-compose.yml"))
-      .withEnv("COMPOSE_API_VERSION", "auto")
-      .withExposedService("database", 5432)
-      .withExposedService("adminer", 8081)
-      .withExposedService("orders", 8080)
-      .waitingFor("database", Wait.forListeningPort())
-      .waitingFor("adminer", Wait.forListeningPort())
-      .waitingFor("orders", Wait.forListeningPort())
-      .withLocalCompose(true)
-      .withOptions("--compatibility");
+  private static final GenericContainer<?> environment =
+    new GenericContainer<>("wildfly-bootable/jakarta-orm:local")
+      .withExposedPorts(8080)
+      .withNetwork(Network.newNetwork())
+      .withNetworkAliases("wildfly-network-alias")
+      .withLogConsumer(new Slf4jLogConsumer(LOG))
+      .waitingFor(Wait.forLogMessage(".*WFLYSRV0025.*", 1));
+
+  @BeforeAll
+  public static void beforeAll()
+  {
+    baseURI = "http://" + environment.getHost() + ":"
+      + String.valueOf(environment.getMappedPort(8080));
+  }
 
   @Test
   public void testCustomerService()
@@ -42,7 +45,8 @@ public class TestCustomer
     //
     // Test get customers
     //
-    Customer[] customers = given().when().get("/customers").then()
+    Customer[] customers = given().log().uri().when().get("/customers").then()
+      .log().ifError()
       .statusCode(HttpStatus.SC_OK)
       .extract().body().as(Customer[].class);
     assertThat(customers).isNotEmpty();

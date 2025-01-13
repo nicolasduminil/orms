@@ -12,7 +12,7 @@ import java.util.*;
 @ApplicationScoped
 public class OrderRepository
 {
-  @Inject
+  @PersistenceContext(unitName = "orders")
   EntityManager entityManager;
 
   public List<Order> findAll()
