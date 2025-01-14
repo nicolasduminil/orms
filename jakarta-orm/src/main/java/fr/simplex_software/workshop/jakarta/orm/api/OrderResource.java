@@ -11,8 +11,8 @@ import java.net.*;
 
 @ApplicationScoped
 @Path("orders")
-@Produces("application/json")
-@Consumes("application/json")
+@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public class OrderResource
 {
   @Inject

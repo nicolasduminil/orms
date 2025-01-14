@@ -1,24 +1,31 @@
 package fr.simplex_software.workshop.jakarta.orm.data;
 
 import jakarta.persistence.*;
+import jakarta.xml.bind.annotation.*;
 
 @Entity
 @Table(name = "ORDERS")
 @NamedQuery(name = "Orders.findAll",
   query = "SELECT o FROM Order o WHERE o.customer.id = :customerId ORDER BY o.item")
-
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Order
 {
   @Id
   @SequenceGenerator(name = "orderSequence", sequenceName = "orderId_seq", allocationSize = 1)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "orderSequence")
+  @XmlAttribute
+  @Column(name = "ID", nullable = false, length = 40)
   private Long id;
-  @Column(length = 40)
+  @Column(name = "ITEM", length = 40)
+  @XmlAttribute
   private String item;
-  @Column
+  @Column(name = "PRICE", length = 40)
+  @XmlAttribute
   private Long price;
   @ManyToOne
-  @JoinColumn(name = "customer_id")
+  @JoinColumn(name = "CUSTOMER_ID")
+  @XmlTransient
   private Customer customer;
 
   public Order()

@@ -23,13 +23,6 @@
     <dependencies>
       <dependency>
         <groupId>org.wildfly.bom</groupId>
-        <artifactId>wildfly-microprofile</artifactId>
-        <version>${wildfly.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.wildfly.bom</groupId>
         <artifactId>wildfly-ee-with-tools</artifactId>
         <version>${wildfly.version}</version>
         <type>pom</type>
@@ -51,15 +44,28 @@
       <version>${jakarta.jakartaee-api.version}</version>
       <scope>provided</scope>
     </dependency>
+    <!--dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-jackson-provider</artifactId>
+      <version>3.15.6.Final</version>
+      <scope>provided</scope>
+    </dependency-->
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
-      <artifactId>resteasy-client</artifactId>
+      <artifactId>resteasy-jaxb-provider</artifactId>
+      <version>6.2.11.Final</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.jboss.resteasy</groupId>
-      <artifactId>resteasy-json-binding-provider</artifactId>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+      <version>3.0.0</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.h2database</groupId>
@@ -123,14 +129,7 @@
     <dependency>
       <groupId>org.hibernate.orm</groupId>
       <artifactId>hibernate-core</artifactId>
-      <scope>test</scope>
-      <version>6.6.4.Final</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse</groupId>
-      <artifactId>yasson</artifactId>
-      <version>3.0.4</version>
-      <scope>test</scope>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
   <build>
@@ -157,8 +156,7 @@
           </feature-packs>
           <layers>
             <layer>cloud-server</layer>
-            <layer>jaxrs-server</layer>
-            <!--layer>web-console</layer-->
+            <layer>jaxrs</layer>
             <layer>logging</layer>
             <layer>management</layer>
           </layers>

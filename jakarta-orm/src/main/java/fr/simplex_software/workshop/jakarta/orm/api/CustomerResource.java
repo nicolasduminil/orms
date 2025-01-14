@@ -11,8 +11,10 @@ import java.net.*;
 
 @ApplicationScoped
 @Path("customers")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
+/*@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})*/
+@Produces(MediaType.APPLICATION_XML)
+@Consumes(MediaType.APPLICATION_XML)
 public class CustomerResource
 {
   @Inject
@@ -21,7 +23,7 @@ public class CustomerResource
   @GET
   public Response getAll()
   {
-    return Response.ok().entity(customerRepository.findAll()).build();
+    return Response.ok().entity(new Customers(customerRepository.findAll())).build();
   }
 
   @GET

@@ -1,0 +1,110 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------< fr.simplex-software.workshop:jakarta-orm >--------------
+[INFO] Building ORMS :: the wildfly module 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ war ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.6.0:tree (default-cli) @ jakarta-orm ---
+[INFO] fr.simplex-software.workshop:jakarta-orm:war:1.0-SNAPSHOT
+[INFO] +- jakarta.platform:jakarta.jakartaee-api:jar:10.0.0:provided
+[INFO] |  +- jakarta.platform:jakarta.jakartaee-web-api:jar:10.0.0:provided
+[INFO] |  |  +- jakarta.servlet:jakarta.servlet-api:jar:6.0.0:provided
+[INFO] |  |  +- jakarta.servlet.jsp:jakarta.servlet.jsp-api:jar:3.1.1:provided
+[INFO] |  |  +- jakarta.el:jakarta.el-api:jar:5.0.1:provided
+[INFO] |  |  +- jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:jar:3.0.0:provided
+[INFO] |  |  +- jakarta.faces:jakarta.faces-api:jar:4.0.1:provided
+[INFO] |  |  +- jakarta.ws.rs:jakarta.ws.rs-api:jar:3.1.0:provided
+[INFO] |  |  +- jakarta.websocket:jakarta.websocket-api:jar:2.1.0-jbossorg-2:provided
+[INFO] |  |  +- jakarta.websocket:jakarta.websocket-client-api:jar:2.1.0-jbossorg-2:provided
+[INFO] |  |  +- jakarta.annotation:jakarta.annotation-api:jar:2.1.1:provided
+[INFO] |  |  +- jakarta.ejb:jakarta.ejb-api:jar:4.0.1:provided
+[INFO] |  |  +- jakarta.validation:jakarta.validation-api:jar:3.0.2:provided
+[INFO] |  |  +- jakarta.interceptor:jakarta.interceptor-api:jar:2.1.0:provided
+[INFO] |  |  +- jakarta.enterprise:jakarta.enterprise.cdi-api:jar:4.0.1:provided
+[INFO] |  |  +- jakarta.enterprise:jakarta.enterprise.lang-model:jar:4.0.1:provided
+[INFO] |  |  +- jakarta.authentication:jakarta.authentication-api:jar:3.0.0:provided
+[INFO] |  |  \- jakarta.security.enterprise:jakarta.security.enterprise-api:jar:3.0.0:provided
+[INFO] |  +- jakarta.jms:jakarta.jms-api:jar:3.1.0:provided
+[INFO] |  +- jakarta.activation:jakarta.activation-api:jar:2.1.3:provided
+[INFO] |  +- jakarta.mail:jakarta.mail-api:jar:2.1.3:provided
+[INFO] |  +- jakarta.resource:jakarta.resource-api:jar:2.1.0:provided
+[INFO] |  +- jakarta.authorization:jakarta.authorization-api:jar:2.1.0:provided
+[INFO] |  \- jakarta.batch:jakarta.batch-api:jar:2.1.1:provided
+[INFO] +- org.jboss.resteasy:resteasy-json-binding-provider:jar:6.2.9.Final:provided
+[INFO] |  +- org.eclipse.parsson:parsson:jar:1.1.6:provided
+[INFO] |  +- jakarta.json.bind:jakarta.json.bind-api:jar:3.0.1:provided
+[INFO] |  +- org.eclipse:yasson:jar:3.0.2:provided
+[INFO] |  \- org.jboss.logging:jboss-logging:jar:3.5.3.Final:provided
+[INFO] +- com.h2database:h2:jar:2.3.232:runtime
+[INFO] +- org.slf4j:slf4j-api:jar:2.0.10:test
+[INFO] +- org.slf4j:slf4j-reload4j:jar:2.0.10:test
+[INFO] |  \- ch.qos.reload4j:reload4j:jar:1.2.22:test
+[INFO] +- org.testcontainers:testcontainers:jar:1.20.4:test
+[INFO] |  +- junit:junit:jar:4.13.1:test
+[INFO] |  |  \- org.hamcrest:hamcrest-core:jar:1.3:test
+[INFO] |  +- org.apache.commons:commons-compress:jar:1.24.0:test
+[INFO] |  +- org.rnorth.duct-tape:duct-tape:jar:1.0.8:test
+[INFO] |  |  \- org.jetbrains:annotations:jar:17.0.0:test
+[INFO] |  +- com.github.docker-java:docker-java-api:jar:3.4.0:test
+[INFO] |  |  \- com.fasterxml.jackson.core:jackson-annotations:jar:2.15.4:test
+[INFO] |  \- com.github.docker-java:docker-java-transport-zerodep:jar:3.4.0:test
+[INFO] |     +- com.github.docker-java:docker-java-transport:jar:3.4.0:test
+[INFO] |     \- net.java.dev.jna:jna:jar:5.13.0:test
+[INFO] +- org.testcontainers:junit-jupiter:jar:1.20.4:test
+[INFO] +- org.assertj:assertj-core:jar:3.26.3:test
+[INFO] |  \- net.bytebuddy:byte-buddy:jar:1.14.11:provided
+[INFO] +- io.rest-assured:rest-assured:jar:5.5.0:test
+[INFO] |  +- org.apache.groovy:groovy:jar:4.0.22:test
+[INFO] |  +- org.apache.groovy:groovy-xml:jar:4.0.22:test
+[INFO] |  +- org.apache.httpcomponents:httpclient:jar:4.5.14:test
+[INFO] |  |  +- org.apache.httpcomponents:httpcore:jar:4.4.16:test
+[INFO] |  |  +- commons-logging:commons-logging:jar:1.2:test
+[INFO] |  |  \- commons-codec:commons-codec:jar:1.15:test
+[INFO] |  +- org.apache.httpcomponents:httpmime:jar:4.5.13:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.ccil.cowan.tagsoup:tagsoup:jar:1.2.1:test
+[INFO] |  +- io.rest-assured:json-path:jar:5.5.0:test
+[INFO] |  |  +- org.apache.groovy:groovy-json:jar:4.0.22:test
+[INFO] |  |  \- io.rest-assured:rest-assured-common:jar:5.5.0:test
+[INFO] |  \- io.rest-assured:xml-path:jar:5.5.0:test
+[INFO] |     \- org.apache.commons:commons-lang3:jar:3.14.0:test
+[INFO] +- org.jboss.logging:commons-logging-jboss-logging:jar:1.0.0.Final:test
+[INFO] +- org.jboss.logmanager:jboss-logmanager:jar:3.0.6.Final:test
+[INFO] |  +- org.jboss.modules:jboss-modules:jar:2.1.5.Final:test
+[INFO] |  +- io.smallrye.common:smallrye-common-constraint:jar:2.2.0:test
+[INFO] |  +- io.smallrye.common:smallrye-common-cpu:jar:2.2.0:test
+[INFO] |  +- io.smallrye.common:smallrye-common-expression:jar:2.2.0:test
+[INFO] |  |  \- io.smallrye.common:smallrye-common-function:jar:2.2.0:test
+[INFO] |  +- io.smallrye.common:smallrye-common-net:jar:2.2.0:test
+[INFO] |  +- io.smallrye.common:smallrye-common-os:jar:2.2.0:test
+[INFO] |  +- io.smallrye.common:smallrye-common-ref:jar:2.2.0:test
+[INFO] |  \- jakarta.json:jakarta.json-api:jar:2.1.3:provided
+[INFO] +- org.junit.jupiter:junit-jupiter:jar:5.11.0:test
+[INFO] |  +- org.junit.jupiter:junit-jupiter-api:jar:5.11.0:test
+[INFO] |  |  +- org.opentest4j:opentest4j:jar:1.3.0:test
+[INFO] |  |  +- org.junit.platform:junit-platform-commons:jar:1.11.0:test
+[INFO] |  |  \- org.apiguardian:apiguardian-api:jar:1.1.2:test
+[INFO] |  +- org.junit.jupiter:junit-jupiter-params:jar:5.11.0:test
+[INFO] |  \- org.junit.jupiter:junit-jupiter-engine:jar:5.11.0:test
+[INFO] |     \- org.junit.platform:junit-platform-engine:jar:1.11.0:test
+[INFO] \- org.hibernate.orm:hibernate-core:jar:6.4.4.Final:provided
+[INFO]    +- jakarta.persistence:jakarta.persistence-api:jar:3.1.0:provided
+[INFO]    +- jakarta.transaction:jakarta.transaction-api:jar:2.0.1:provided
+[INFO]    +- org.hibernate.common:hibernate-commons-annotations:jar:6.0.6.Final:provided
+[INFO]    +- io.smallrye:jandex:jar:3.2.0:provided
+[INFO]    +- com.fasterxml:classmate:jar:1.5.1:provided
+[INFO]    +- jakarta.xml.bind:jakarta.xml.bind-api:jar:4.0.2:provided
+[INFO]    +- org.glassfish.jaxb:jaxb-runtime:jar:4.0.4:provided
+[INFO]    |  \- org.glassfish.jaxb:jaxb-core:jar:4.0.4:provided
+[INFO]    |     +- org.eclipse.angus:angus-activation:jar:2.0.2:provided
+[INFO]    |     +- org.glassfish.jaxb:txw2:jar:4.0.4:provided
+[INFO]    |     \- com.sun.istack:istack-commons-runtime:jar:4.1.2:provided
+[INFO]    +- jakarta.inject:jakarta.inject-api:jar:2.0.1:provided
+[INFO]    \- org.antlr:antlr4-runtime:jar:4.13.0:provided
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.027 s
+[INFO] Finished at: 2025-01-14T16:24:22+01:00
+[INFO] ------------------------------------------------------------------------

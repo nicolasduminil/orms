@@ -45,8 +45,7 @@ public class TestCustomer
     //
     // Test get customers
     //
-    Customer[] customers = given().log().uri().when().get("/customers").then()
-      .log().ifError()
+    Customer[] customers = given().when().get("/customers").then()
       .statusCode(HttpStatus.SC_OK)
       .extract().body().as(Customer[].class);
     assertThat(customers).isNotEmpty();
@@ -57,7 +56,8 @@ public class TestCustomer
     //
     // Test get customer
     //
-    customer = given().when().pathParam("id", customer.getId())
+    customer = given().contentType(ContentType.XML).accept(ContentType.XML)
+      .when().pathParam("id", customer.getId())
       .get("/customers/{id}").then()
       .statusCode(HttpStatus.SC_OK)
       .extract().body().as(Customer.class);
@@ -71,14 +71,14 @@ public class TestCustomer
     customer = given()
       .log().all()
       .body(customer)
-      .contentType(ContentType.JSON)
-      .accept(ContentType.JSON)
+      .contentType(ContentType.XML)
+      .accept(ContentType.XML)
       .when()
       .post("/customers")
       .then()
       .log().all()
       .statusCode(HttpStatus.SC_CREATED)
-      .contentType(ContentType.JSON)
+      .contentType(ContentType.XML)
       .extract().body().as(Customer.class);
     assertThat(customer).isNotNull();
     assertThat(customer.getFirstName()).isEqualTo("Mike");
@@ -91,7 +91,7 @@ public class TestCustomer
     customer.addOrder(new Order("myItem03", 85L, customer));
     customer = given()
       .body(customer)
-      .contentType(ContentType.JSON)
+      .contentType(ContentType.XML)
       .when()
       .put("/customers")
       .then()
