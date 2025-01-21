@@ -3,8 +3,7 @@
 This project aims at illustrating an apparent issue that I found and submitted 
 to the support under the reference 45753
 
-The project exposes two simple REST services that CRUD two simple JPA entities, 
-using Panache repositories. The entities maintain a bidirectional one-to-many
+The project exposes two simple REST services that CRUD two simple JPA entities. The entities maintain a bidirectional one-to-many
 relationship.
 
 In order to avoid #29225, I'm using Jackson2, instead of Jakarta JSON Binding, 
