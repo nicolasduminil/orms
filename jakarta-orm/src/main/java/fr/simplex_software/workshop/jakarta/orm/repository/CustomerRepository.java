@@ -17,13 +17,15 @@ public class CustomerRepository
 
   public List<Customer> findAll()
   {
-    return entityManager.createNamedQuery("Customers.findAll", Customer.class)
+    return entityManager.createNamedQuery("Customer.findAllWithOrders", Customer.class)
       .getResultList();
   }
 
   public Customer findCustomerById(Long id)
   {
-    Customer customer = entityManager.find(Customer.class, id);
+    Customer customer = entityManager
+      .createNamedQuery("Customer.findCustomerByIdWithOrders", Customer.class)
+      .setParameter("id", id).getSingleResult();
     if (customer == null)
     {
       throw new WebApplicationException("Customer with id of " + id + " does not exist.", 404);

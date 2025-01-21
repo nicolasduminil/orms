@@ -1,7 +1,8 @@
 package fr.simplex_software.workshop.jakarta.orm.tests;
 
-import fr.simplex_software.workshop.jakarta.orm.data.*;
 import fr.simplex_software.workshop.jakarta.orm.data.Order;
+import fr.simplex_software.workshop.jakarta.orm.data.*;
+import io.restassured.common.mapper.*;
 import io.restassured.http.*;
 import org.apache.http.*;
 import org.junit.jupiter.api.*;
@@ -9,19 +10,21 @@ import org.slf4j.*;
 import org.testcontainers.containers.*;
 import org.testcontainers.containers.output.*;
 import org.testcontainers.containers.wait.strategy.*;
-import org.testcontainers.junit.jupiter.*;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.*;
 
-import java.io.*;
 import java.util.*;
 
 import static io.restassured.RestAssured.*;
 import static org.assertj.core.api.Assertions.*;
 
 @Testcontainers
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestCustomer
 {
-  private static Logger LOG = LoggerFactory.getLogger("orders");
+  private static final Logger LOG = LoggerFactory.getLogger("orders");
+  private static Long customerId;
+  private static Long orderId;
 
   @Container
   private static final GenericContainer<?> environment =
@@ -36,124 +39,212 @@ public class TestCustomer
   public static void beforeAll()
   {
     baseURI = "http://" + environment.getHost() + ":"
-      + String.valueOf(environment.getMappedPort(8080));
+      + environment.getMappedPort(8080);
   }
 
   @Test
-  public void testCustomerService()
+  @org.junit.jupiter.api.Order(10)
+  public void testCreateCustomer()
   {
-    //
-    // Test get customers
-    //
-    Customer[] customers = given().when().get("/customers").then()
-      .statusCode(HttpStatus.SC_OK)
-      .extract().body().as(Customer[].class);
-    assertThat(customers).isNotEmpty();
-    assertThat(customers).hasSize(2);
-    Customer customer = customers[0];
-    assertThat(customer.getId()).isNotNull();
-    assertThat(customer.getFirstName()).isEqualTo("John");
-    //
-    // Test get customer
-    //
-    customer = given().contentType(ContentType.XML).accept(ContentType.XML)
-      .when().pathParam("id", customer.getId())
-      .get("/customers/{id}").then()
-      .statusCode(HttpStatus.SC_OK)
-      .extract().body().as(Customer.class);
-    assertThat(customer).isNotNull();
-    assertThat(customer.getFirstName()).isEqualTo("John");
-    //
-    // Test create customer
-    //
-    customer = new Customer("Mike", "Doe", "mike.doe@email.com", "096-23419",
-      List.of(new Order("myItem01", 150L, customer), new Order("myItem02", 35L, customer)));
+    Customer customer = new Customer("Mike", "Doe", "mike.doe@email.com", "096-23419");
+    customer.addOrder(new Order("myItem01", 150L, customer));
+    customer.addOrder(new Order("myItem02", 35L, customer));
     customer = given()
       .log().all()
+      .contentType(ContentType.JSON)
+      .accept(ContentType.JSON)
       .body(customer)
-      .contentType(ContentType.XML)
-      .accept(ContentType.XML)
       .when()
       .post("/customers")
       .then()
       .log().all()
       .statusCode(HttpStatus.SC_CREATED)
-      .contentType(ContentType.XML)
+      .extract().body().as(Customer.class);
+    assertThat(customer).isNotNull();
+    assertThat(customer.getId()).isNotNull();
+    customerId = customer.getId();
+    assertThat(customer.getFirstName()).isEqualTo("Mike");
+  }
+
+  @org.junit.jupiter.api.Order(20)
+  @Test
+  public void testGetCustomers()
+  {
+    List<Customer> customers = given()
+      .log().all()
+      .accept(ContentType.JSON)
+      .when().get("/customers")
+      .then().log().all()
+      .statusCode(HttpStatus.SC_OK)
+      .extract().body().as(new TypeRef<>()
+      {
+      });
+    assertThat(customers).isNotEmpty();
+    assertThat(customers).hasSize(1);
+    Customer customer = customers.getFirst();
+    assertThat(customer.getId()).isNotNull();
+    assertThat(customer.getFirstName()).isEqualTo("Mike");
+  }
+
+  @org.junit.jupiter.api.Order(30)
+  @Test
+  public void testGetCustomer()
+  {
+    Customer customer = given()
+      .log().all()
+      .accept(ContentType.JSON)
+      .when().pathParam("id", customerId)
+      .get("/customers/{id}")
+      .then().log().all()
+      .statusCode(HttpStatus.SC_OK)
       .extract().body().as(Customer.class);
     assertThat(customer).isNotNull();
     assertThat(customer.getFirstName()).isEqualTo("Mike");
-    //
-    // Test update customer
-    //
-    customer.setFirstName("Jack");
-    customer.setEmail("jack.doe@email.com");
+  }
+
+  @org.junit.jupiter.api.Order(40)
+  @Test
+  public void testUpdateCustomer()
+  {
+    Customer customer = given()
+      .log().all()
+      .accept(ContentType.JSON)
+      .when().pathParam("id", customerId)
+      .get("/customers/{id}")
+      .then().log().all()
+      .statusCode(HttpStatus.SC_OK)
+      .extract().body().as(Customer.class);
+    customer.setFirstName("John");
+    customer.setEmail("john.doe@email.com");
     customer.setPhone("096-23420");
-    customer.addOrder(new Order("myItem03", 85L, customer));
     customer = given()
+      .log().all()
+      .contentType(ContentType.JSON)
+      .accept(ContentType.JSON)
       .body(customer)
-      .contentType(ContentType.XML)
       .when()
       .put("/customers")
-      .then()
+      .then().log().all()
       .statusCode(HttpStatus.SC_ACCEPTED)
       .extract().body().as(Customer.class);
     assertThat(customer).isNotNull();
-    assertThat(customer.getFirstName()).isEqualTo("Jack");
-    //
-    // Test create order
-    //
+    assertThat(customer.getId()).isNotNull();
+    assertThat(customer.getFirstName()).isEqualTo("John");
+  }
+
+  @org.junit.jupiter.api.Order(41)
+  @Test
+  public void testCreateOrder()
+  {
+    Customer customer = given()
+      .log().all()
+      .accept(ContentType.JSON)
+      .when().pathParam("id", customerId)
+      .get("/customers/{id}")
+      .then().log().all()
+      .statusCode(HttpStatus.SC_OK)
+      .extract().body().as(Customer.class);
     Order order = new Order("myItem04", 85L, customer);
     customer.addOrder(order);
     order = given()
+      .log().all()
+      .contentType(ContentType.JSON)
+      .accept(ContentType.JSON)
       .body(order)
       .when()
-      .put("/orders")
-      .then()
+      .post("/orders")
+      .then().log().all()
       .statusCode(HttpStatus.SC_CREATED)
       .extract().body().as(Order.class);
     assertThat(order).isNotNull();
     assertThat(order.getItem()).isEqualTo("myItem04");
-    //
-    // Test get orders
-    //
-    Order[] orders = given().when().get("/orders").then()
+    orderId = order.getId();
+  }
+
+  @org.junit.jupiter.api.Order(45)
+  @Test
+  public void testGetOrders()
+  {
+    List<Order> orders = given()
+      .log().all()
+      .accept(ContentType.JSON)
+      .when().get("/orders")
+      .then().log().all()
       .statusCode(HttpStatus.SC_OK)
-      .extract().body().as(Order[].class);
+      .extract().body().as(new TypeRef<>()
+      {
+      });
     assertThat(orders).isNotEmpty();
-    assertThat(orders).hasSize(4);
-    //
-    // Test get order
-    //
-    order = given().when().pathParam("id", order.getId())
-      .get("/orders/{id}").then()
+    assertThat(orders).hasSize(3);
+  }
+
+  @org.junit.jupiter.api.Order(50)
+  @Test
+  public void testGetOrder()
+  {
+    assertThat(orderId).isNotNull();
+    Order order = given()
+      .log().all()
+      .accept(ContentType.JSON)
+      .when().pathParam("id", orderId)
+      .get("/orders/{id}")
+      .then().log().all()
       .statusCode(HttpStatus.SC_OK)
       .extract().body().as(Order.class);
     assertThat(order).isNotNull();
     assertThat(order.getItem()).isEqualTo("myItem04");
-    //
-    // Test update order
-    //
+  }
+
+  @org.junit.jupiter.api.Order(60)
+  @Test
+  public void testUpdateOrder()
+  {
+    Order order = given()
+      .log().all()
+      .accept(ContentType.JSON)
+      .when().pathParam("id", orderId)
+      .get("/orders/{id}")
+      .then().log().all()
+      .statusCode(HttpStatus.SC_OK)
+      .extract().body().as(Order.class);
     order.setItem("myItem05");
     order = given()
-      .when().body(order).put("/orders")
-      .then()
+      .log().all()
+      .contentType(ContentType.JSON)
+      .accept(ContentType.JSON)
+      .body(order)
+      .when()
+      .put("/orders")
+      .then().log().all()
       .statusCode(HttpStatus.SC_ACCEPTED)
       .extract().body().as(Order.class);
     assertThat(order).isNotNull();
     assertThat(order.getItem()).isEqualTo("myItem05");
-    //
-    // Test DELETE Order
-    //
+  }
+
+  @org.junit.jupiter.api.Order(70)
+  @Test
+  public void testDeleteOrder()
+  {
     given()
-      .when().pathParam("id", order.getId()).delete("/orders/{id}")
-      .then()
+      .log().all()
+      .accept(ContentType.JSON)
+      .when().pathParam("id", orderId)
+      .delete("/orders/{id}")
+      .then().log().all()
       .statusCode(HttpStatus.SC_NO_CONTENT);
-    //
-    // Test DELETE Customer
-    //
+  }
+
+  @org.junit.jupiter.api.Order(100)
+  @Test
+  public void testDeleteCustomer()
+  {
     given()
-      .when().pathParam("id", customer.getId()).delete("/customers/{id}")
-      .then()
-      .statusCode((HttpStatus.SC_NO_CONTENT));
+      .log().all()
+      .accept(ContentType.JSON)
+      .when().pathParam("id", customerId)
+      .delete("/customers/{id}")
+      .then().log().all()
+      .statusCode(HttpStatus.SC_NO_CONTENT);
   }
 }

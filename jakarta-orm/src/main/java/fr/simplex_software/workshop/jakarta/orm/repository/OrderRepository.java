@@ -17,12 +17,12 @@ public class OrderRepository
 
   public List<Order> findAll()
   {
-    return (List<Order>) entityManager.createQuery("SELECT o FROM Order o")
+    return (List<Order>) entityManager.createNamedQuery("Orders.findAll")
       .getResultList();
   }
   public List<Order> findAllByCustomerId(Long customerId)
   {
-    return (List<Order>) entityManager.createNamedQuery("Orders.findAll")
+    return (List<Order>) entityManager.createNamedQuery("Orders.findAllWithCustomerId")
       .setParameter("customerId", customerId)
       .getResultList();
   }

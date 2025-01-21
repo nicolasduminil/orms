@@ -2,31 +2,39 @@ package fr.simplex_software.workshop.quarkus.orm.data;
 
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
+import jakarta.xml.bind.annotation.*;
 
 @Entity
 @Table(name = "ORDERS")
 @NamedQuery(name = "Orders.findAll",
+  query = "SELECT o FROM Order o ORDER BY o.item")
+@NamedQuery(name = "Orders.findAllWithCustomerId",
   query = "SELECT o FROM Order o WHERE o.customer.id = :customerId ORDER BY o.item")
-@JsonIdentityInfo(
-  generator = ObjectIdGenerators.PropertyGenerator.class,
-  property = "id"
-)
-@JsonTypeInfo(
-  use = JsonTypeInfo.Id.CLASS,
-  include = JsonTypeInfo.As.PROPERTY,
-  property = "@class")
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+@JsonPropertyOrder({"id", "item", "price", "customer"})
 public class Order
 {
   @Id
   @SequenceGenerator(name = "orderSequence", sequenceName = "orderId_seq", allocationSize = 1)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "orderSequence")
+  @Column(name = "ID", nullable = false, length = 40)
+  @XmlAttribute
+  @JsonProperty
   private Long id;
-  @Column(length = 40)
+  @Column(name ="ITEM", length = 40)
+  @XmlAttribute
+  @JsonProperty
   private String item;
-  @Column
+  @Column(name = "PRICE", length = 40)
+  @XmlAttribute
+  @JsonProperty
   private Long price;
   @ManyToOne
   @JoinColumn(name = "customer_id")
+  @JsonBackReference
+  @XmlElement
+  @JsonProperty
   private Customer customer;
 
   public Order()

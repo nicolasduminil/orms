@@ -8,22 +8,21 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 
 import java.net.*;
+import java.util.*;
 
 @ApplicationScoped
 @Path("orders")
-@Produces("application/json")
-@Consumes("application/json")
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public class OrderResource
 {
   @Inject
   private OrderRepository orderRepository;
-  @Inject
-  private CustomerRepository customerRepository;
 
   @GET
   public Response getAll()
   {
-    return Response.ok().entity(orderRepository.findAll()).build();
+    return Response.ok().entity(new GenericEntity<List<Order>>(orderRepository.findAll()) {}).build();
   }
 
   @GET
@@ -31,6 +30,13 @@ public class OrderResource
   public Response getAllWithCustomer(@PathParam("customerId") Long customerId)
   {
     return Response.ok().entity(orderRepository.findAllByCustomerId(customerId)).build();
+  }
+
+  @GET
+  @Path("/{id}")
+  public Response get(@PathParam("id") Long id)
+  {
+    return Response.ok().entity(orderRepository.findOrderById(id)).build();
   }
 
   @POST

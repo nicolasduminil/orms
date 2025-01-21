@@ -2,6 +2,7 @@ package fr.simplex_software.workshop.quarkus.orm.data;
 
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
+import jakarta.xml.bind.annotation.*;
 
 import java.util.*;
 
@@ -11,32 +12,46 @@ import java.util.*;
 @NamedQuery(name = "Customers.findAll",
   query = "SELECT c FROM Customer c ORDER BY c.id",
   hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
-@JsonIdentityInfo(
-  generator = ObjectIdGenerators.PropertyGenerator.class,
-  property = "id"
+@NamedQuery(
+  name = "Customer.findAllWithOrders",
+  query = "SELECT DISTINCT c FROM Customer c LEFT JOIN FETCH c.orders"
 )
-@JsonTypeInfo(
-  use = JsonTypeInfo.Id.CLASS,
-  include = JsonTypeInfo.As.PROPERTY,
-  property = "@class")
+@NamedQuery(
+  name = "Customer.findCustomerByIdWithOrders",
+  query = "SELECT c FROM Customer c LEFT JOIN FETCH c.orders where c.id = :id"
+)
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+@JsonPropertyOrder({"id", "firstName", "lastName", "email", "phone", "orders"})
 public class Customer
 {
   @Id
   @SequenceGenerator(name = "customerSequence", sequenceName = "customerId_seq", allocationSize = 1)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customerSequence")
   @Column(name = "ID", nullable = false)
+  @XmlAttribute
+  @JsonProperty
   private Long id;
   @Column(name = "FIRST_NAME", nullable = false, length = 40)
+  @XmlAttribute
+  @JsonProperty
   private String firstName;
   @Column(name = "LAST_NAME", nullable = false, length = 40)
+  @XmlAttribute
+  @JsonProperty
   private String lastName;
   @Column(name = "EMAIL", nullable = false, unique = true, length = 40)
+  @XmlAttribute
+  @JsonProperty
   private String email;
   @Column(name = "PHONE", nullable = false, unique = true, length = 40)
+  @XmlAttribute
+  @JsonProperty
   private String phone;
   @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-  //@JsonSerialize(using = OrderListSerializer.class)
-  //@JsonDeserialize(using = OrderListDeserializer.class)
+  @JsonManagedReference
+  @XmlElement
+  @JsonProperty
   public List<Order> orders = new ArrayList<>();
 
   public Customer() {}

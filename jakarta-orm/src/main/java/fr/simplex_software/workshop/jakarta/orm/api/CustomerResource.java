@@ -8,13 +8,12 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 
 import java.net.*;
+import java.util.*;
 
 @ApplicationScoped
 @Path("customers")
-/*@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})*/
-@Produces(MediaType.APPLICATION_XML)
-@Consumes(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public class CustomerResource
 {
   @Inject
@@ -23,7 +22,7 @@ public class CustomerResource
   @GET
   public Response getAll()
   {
-    return Response.ok().entity(new Customers(customerRepository.findAll())).build();
+    return Response.ok().entity(new GenericEntity<List<Customer>>(customerRepository.findAll()) {}).build();
   }
 
   @GET
@@ -36,9 +35,6 @@ public class CustomerResource
   @POST
   public Response create(Customer customer)
   {
-    if (customer.getOrders() != null)
-      customer.getOrders().forEach(order -> order.setCustomer(customer));
-    customerRepository.createCustomer(customer);
     return Response.created(URI.create("/customers/" + customer.getId()))
       .entity(customerRepository.createCustomer(customer)).build();
   }
@@ -50,7 +46,8 @@ public class CustomerResource
   }
 
   @DELETE
-  public Response delete(@QueryParam("id") Long customerId)
+  @Path("/{id}")
+  public Response delete(@PathParam("id") Long customerId)
   {
     customerRepository.deleteCustomer(customerId);
     return Response.noContent().build();

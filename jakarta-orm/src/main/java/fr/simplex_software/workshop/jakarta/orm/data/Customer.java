@@ -1,18 +1,29 @@
 package fr.simplex_software.workshop.jakarta.orm.data;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.XmlElement;
 
 import java.util.*;
 
 @Cacheable
 @Entity
 @Table(name = "CUSTOMERS")
-@NamedQuery(name = "Customers.findAll",
+@NamedQuery(name = "Customer.findAll",
   query = "SELECT c FROM Customer c ORDER BY c.id",
   hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
+@NamedQuery(
+  name = "Customer.findAllWithOrders",
+  query = "SELECT DISTINCT c FROM Customer c LEFT JOIN FETCH c.orders"
+)
+@NamedQuery(
+  name = "Customer.findCustomerByIdWithOrders",
+  query = "SELECT c FROM Customer c LEFT JOIN FETCH c.orders where c.id = :id"
+)
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
+@JsonPropertyOrder({"id", "firstName", "lastName", "email", "phone", "orders"})
 public class Customer
 {
   @Id
@@ -20,24 +31,28 @@ public class Customer
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customerSequence")
   @Column(name = "ID", nullable = false)
   @XmlAttribute
+  @JsonProperty
   private Long id;
   @Column(name = "FIRST_NAME", nullable = false, length = 40)
   @XmlAttribute
+  @JsonProperty
   private String firstName;
   @Column(name = "LAST_NAME", nullable = false, length = 40)
   @XmlAttribute
+  @JsonProperty
   private String lastName;
   @Column(name = "EMAIL", nullable = false, unique = true, length = 40)
   @XmlAttribute
+  @JsonProperty
   private String email;
   @Column(name = "PHONE", nullable = false, unique = true, length = 40)
   @XmlAttribute
+  @JsonProperty
   private String phone;
   @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-  @XmlElementWrapper(name = "orders")
-  @XmlElement(name = "order")
-  //@JsonSerialize(using = OrderListSerializer.class)
-  //@JsonDeserialize(using = OrderListDeserializer.class)
+  @JsonManagedReference
+  @JsonProperty
+  @XmlElement
   public List<Order> orders = new ArrayList<>();
 
   public Customer() {}
@@ -114,6 +129,7 @@ public class Customer
   public List<Order> addOrder(Order order)
   {
     orders.add(order);
+    order.setCustomer(this);
     return orders;
   }
 
