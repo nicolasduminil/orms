@@ -1,7 +1,7 @@
-# Quarkus issue #...
+# Quarkus issue #45753
 
 This project aims at illustrating an apparent issue that I found and submitted 
-to the support under the reference ...
+to the support under the reference 45753
 
 The project exposes two simple REST services that CRUD two simple JPA entities, 
 using Panache repositories. The entities maintain a bidirectional one-to-many
