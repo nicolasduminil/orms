@@ -21,8 +21,8 @@ with Jakarta EE (Wildfly), works as expected.
 
 ## Testing
 
-    $ git clone 
-    $ cd ...
+    $ git clone https://github.com/nicolasduminil/orms.git
+    $ cd orms
     $ mvn -DskipTests package
     $ cd quarkus-orm     #Testing with Quarkus
     $ mvn test           #Test fails, exception 
