@@ -50,7 +50,7 @@ public class Customer
   private String phone;
   @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
   @JsonManagedReference
-  @XmlElement
+  @XmlTransient
   @JsonProperty
   public List<Order> orders = new ArrayList<>();
 

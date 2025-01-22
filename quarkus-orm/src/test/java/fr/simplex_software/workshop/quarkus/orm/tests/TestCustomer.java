@@ -26,7 +26,7 @@ public class TestCustomer
 
   @Test
   @org.junit.jupiter.api.Order(10)
-  public void testCreateCustomer()
+  public void testCreateCustomerWithJSON()
   {
     Customer customer = new Customer("Mike", "Doe", "mike.doe@email.com", "096-23419");
     customer.addOrder(new Order("myItem01", 150L, customer));
@@ -47,6 +47,31 @@ public class TestCustomer
     customerId = customer.getId();
     assertThat(customer.getFirstName()).isEqualTo("Mike");
   }
+
+  @Test
+  @org.junit.jupiter.api.Order(10)
+  public void testCreateCustomerWithXML()
+  {
+    Customer customer = new Customer("Mike", "Doe", "mike.doe@email.com", "096-23419");
+    customer.addOrder(new Order("myItem01", 150L, customer));
+    customer.addOrder(new Order("myItem02", 35L, customer));
+    customer = given()
+      .log().all()
+      .contentType(ContentType.XML)
+      .accept(ContentType.XML)
+      .body(customer)
+      .when()
+      .post("/customers")
+      .then()
+      .log().all()
+      .statusCode(HttpStatus.SC_CREATED)
+      .extract().body().as(Customer.class);
+    assertThat(customer).isNotNull();
+    assertThat(customer.getId()).isNotNull();
+    customerId = customer.getId();
+    assertThat(customer.getFirstName()).isEqualTo("Mike");
+  }
+
 
   /*@org.junit.jupiter.api.Order(20)
   @Test
