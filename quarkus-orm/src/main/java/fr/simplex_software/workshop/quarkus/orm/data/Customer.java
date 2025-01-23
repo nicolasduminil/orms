@@ -52,7 +52,7 @@ public class Customer
   @JsonManagedReference
   @XmlTransient
   @JsonProperty
-  public List<Order> orders = new ArrayList<>();
+  private List<Order> orders = new ArrayList<>();
 
   public Customer() {}
 

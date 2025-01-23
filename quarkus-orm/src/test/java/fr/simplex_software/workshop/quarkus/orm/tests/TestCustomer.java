@@ -52,7 +52,7 @@ public class TestCustomer
   @org.junit.jupiter.api.Order(10)
   public void testCreateCustomerWithXML()
   {
-    Customer customer = new Customer("Mike", "Doe", "mike.doe@email.com", "096-23419");
+    Customer customer = new Customer("Jane", "Doe", "jane.doe@email.com", "096-23423");
     customer.addOrder(new Order("myItem01", 150L, customer));
     customer.addOrder(new Order("myItem02", 35L, customer));
     customer = given()
@@ -69,7 +69,7 @@ public class TestCustomer
     assertThat(customer).isNotNull();
     assertThat(customer.getId()).isNotNull();
     customerId = customer.getId();
-    assertThat(customer.getFirstName()).isEqualTo("Mike");
+    assertThat(customer.getFirstName()).isEqualTo("Jane");
   }
 
 
