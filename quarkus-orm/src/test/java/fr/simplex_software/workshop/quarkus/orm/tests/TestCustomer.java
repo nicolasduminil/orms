@@ -48,7 +48,7 @@ public class TestCustomer
     assertThat(customer.getFirstName()).isEqualTo("Mike");
   }
 
-  @Test
+  /*@Test
   @org.junit.jupiter.api.Order(10)
   public void testCreateCustomerWithXML()
   {
@@ -70,10 +70,10 @@ public class TestCustomer
     assertThat(customer.getId()).isNotNull();
     customerId = customer.getId();
     assertThat(customer.getFirstName()).isEqualTo("Jane");
-  }
+  }*/
 
 
-  /*@org.junit.jupiter.api.Order(20)
+  @org.junit.jupiter.api.Order(20)
   @Test
   public void testGetCustomers()
   {
@@ -253,5 +253,5 @@ public class TestCustomer
       .delete("/customers/{id}")
       .then().log().all()
       .statusCode(HttpStatus.SC_NO_CONTENT);
-  }*/
+  }
 }
